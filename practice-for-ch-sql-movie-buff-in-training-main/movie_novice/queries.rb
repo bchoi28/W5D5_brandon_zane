@@ -53,20 +53,22 @@ def below_average_years
   # display each year with movies scoring under 5, with the count of movies
   # scoring under 5 aliased as bad_movies, in descending order
   # hint: use 'select', 'where', 'group', 'order'
-  
+  Movie.select(:yr, "COUNT(*) AS bad_movies").where("score < 5").group(:yr).order("yr DESC")
 end
 
 def alphabetized_actors
   # display the id and name of the second 10 actor names (i.e., #s 11-20)
   # when ordered from A-Z
   # hint: use 'order' and 'limit'
-  
+  Actor.select(:id, :name).limit(10).order(:name).offset(10)
 end
 
 def pulp_fiction_actors
   # practice using joins
   # display the id and name of all actors in the movie Pulp Fiction
   # hint: use 'select', 'joins', 'where'
+  # Movie.joins(:actors).select("actors.name, actors.id").where(title: "Pulp Fiction")
+  Actor.joins(:movies).select(:name, :id).where(movies: {title: "Pulp Fiction"})
   
 end
 
@@ -75,5 +77,28 @@ def uma_movies
   # display the id, title, and year of movies Uma Thurman has acted in
   # order them by ascending year
   # hint: use 'select', 'joins', 'where', and 'order'
-  
+  Movie.select(:id, :title, :yr).joins(:actors).where(actors: {name: "Uma Thurman"}).order(:yr)
+
+
+  # SELECT 
+  #   id, title, yr
+  # FROM 
+  # movies 
+  # WHERE
+  # id = (
+  #   SELECT
+  #   movie_id
+  # FROM 
+  #   castings
+  # WHERE 
+  #   actor_id = (
+  #     SELECT
+  #       id
+  #     FROM 
+  #       actors 
+  #     WHERE 
+  #       name = "Uma"
+      
+  #   ))
+
 end
